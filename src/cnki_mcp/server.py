@@ -63,7 +63,7 @@ def _get_pool() -> BrowserPool:
 
 # ---- 应用生命周期 ----
 @asynccontextmanager
-async def lifespan():
+async def lifespan(server: FastMCP):
     """启动时创建浏览器池，关闭时回收"""
     global _browser_pool
     logger.info("正在启动 CNKI MCP Server...")

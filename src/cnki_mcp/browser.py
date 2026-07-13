@@ -115,6 +115,10 @@ def create_browser(headless: bool = True) -> webdriver.Chrome:
         service = Service(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service, options=options)
 
+        # 设置超时，防止页面加载无限卡住
+        driver.set_page_load_timeout(30)
+        driver.set_script_timeout(30)
+
         # 注入 JS 隐藏 webdriver 属性
         driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
             "source": """
