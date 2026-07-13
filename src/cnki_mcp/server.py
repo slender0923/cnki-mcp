@@ -273,12 +273,19 @@ async def search_cnki(
 
             human_type(driver, search_box, query)
 
-            # 4. 用回车键提交搜索，避免知网下拉建议遮挡按钮
+            # 4. 用回车键提交搜索
             time.sleep(0.3)
             from selenium.webdriver.common.keys import Keys
             search_box.send_keys(Keys.RETURN)
+            time.sleep(2)
 
-            time.sleep(random.uniform(3, 4))
+            # 验证搜索是否真的执行了（URL 或标题应该变化）
+            if "kns" not in driver.current_url and "search" not in driver.current_url.lower():
+                logger.info("回车提交可能未生效，尝试点击搜索按钮兜底...")
+                if safe_click(driver, SEARCH_PAGE["search_button"], timeout=5):
+                    logger.info("已通过按钮点击提交搜索")
+
+            time.sleep(random.uniform(2, 3))
 
             # 5. 翻到目标页
             for current_page in range(1, page + 1):
